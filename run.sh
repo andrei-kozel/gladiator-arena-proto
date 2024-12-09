@@ -44,7 +44,6 @@ echo "::endgroup::"
 
 # Initialize the Go module inside the service directory
 echo "::group::Go mod init and tidy"
-cd golang
 echo "Current directory: $(pwd)"
 ls -la
 go mod init github.com/andrei-kozel/gladiator-arena-proto/golang|| true
