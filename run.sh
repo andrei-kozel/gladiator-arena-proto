@@ -44,6 +44,7 @@ echo "::endgroup::"
 
 # Initialize the Go module inside the service directory
 echo "::group::Go mod init and tidy"
+cd golang
 echo "Current directory: $(pwd)"
 ls -la
 go mod init github.com/andrei-kozel/gladiator-arena-proto/golang|| true
@@ -53,6 +54,8 @@ echo "::endgroup::"
 
 # Commit and push the changes
 echo "::group::Committing and tagging"
+echo "Current directory: $(pwd)"
+cd ..
 echo "Current directory: $(pwd)"
 git config --global user.email "kozel.andrei.94@gmail.com"
 git config --global user.name "Andrei Kozel"
