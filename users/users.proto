@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "github.com/andrei-kozel/gladiator-arena-proto/users";
+
+package users;
+
+message User {
+  string id = 1;
+  string user_id = 2;
+  string username = 3;
+  string email = 4;
+  string display_name = 5;
+}
+
+message UserRequest {
+  string user_id = 1;
+}
+
+message UserResponse {
+  User user = 1;
+}
+
+message RegisterRequest {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message UpdateUserRequest {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+  string display_name = 4;
+}
+
+message DeleteUserRequest {
+  string user_id = 1;
+}
+
+message DeleteUserResponse {
+  bool success = 1;
+}
+
+service Users {
+  rpc GetUser(UserRequest) returns (UserResponse);
+  rpc RegisterUser(RegisterRequest) returns (UserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
