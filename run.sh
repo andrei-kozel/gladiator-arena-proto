@@ -14,8 +14,15 @@ protoc --go_out=./golang --go_opt=paths=source_relative \
 if [ ! -d "golang" ]; then
     mkdir golang
 fi
+cd golang
 
-cd golang/${SERVICE_NAME}
+# Check if folder exists
+# If not, create it
+if [ ! -d "${SERVICE_NAME}" ]; then
+    mkdir ${SERVICE_NAME}
+fi
+cd ${SERVICE_NAME}
+
 go mod init \
   github.com/andrei-kozel/gladiator-arena-proto/golang/${SERVICE_NAME} ||true
 go mod tidy
