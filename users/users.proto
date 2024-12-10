@@ -10,6 +10,9 @@ message User {
   string username = 3;
   string email = 4;
   string display_name = 5;
+  string type = 6;
+  string profile_picture_url = 7;
+  timestamp twitch_created_at = 8;
 }
 
 message UserRequest {
@@ -21,9 +24,7 @@ message UserResponse {
 }
 
 message RegisterRequest {
-  string user_id = 1;
-  string username = 2;
-  string email = 3;
+  User user = 1;
 }
 
 message UpdateUserRequest {
