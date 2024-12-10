@@ -28,10 +28,7 @@ message RegisterRequest {
 }
 
 message UpdateUserRequest {
-  string user_id = 1;
-  string username = 2;
-  string email = 3;
-  string display_name = 4;
+  User user = 1;
 }
 
 message DeleteUserRequest {
