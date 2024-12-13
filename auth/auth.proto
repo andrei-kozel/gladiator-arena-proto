@@ -73,7 +73,6 @@ message LogoutResponse {
 // Token revocation
 message RevokeTokenRequest {
   string session_token = 1;
-  TokenType token_type = 2;
 }
 
 message RevokeTokenResponse {
