@@ -5,7 +5,7 @@ package auth;
 option go_package = "github.com/andrei-kozel/gladiator-arena-proto/golang/auth";
 
 import "google/protobuf/empty.proto";
-import "../users/user.proto";  // Import user proto for references
+import "user/user.proto";  // Import user proto for references
 
 enum ErrorCode {
   ERROR_CODE_UNSPECIFIED = 0;
