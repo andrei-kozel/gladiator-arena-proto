@@ -24,25 +24,26 @@ message Error {
 message SessionInfo {
   string session_id = 1;
   string user_id = 2;
-  repeated string permissions = 3;
+  string session_token = 3;
 }
 
-message ValidateSessionRequest {
-  string session_id = 1;
+// Login
+message LoginResponse {
+  string user_id = 1;
+  string username = 2;
+  string session_token = 3;
+  string refresh_token = 4;
+  int32 expires_in = 5;
+  google.protobuf.Timestamp issued_at = 6;
+  repeated string scopes = 7;
 }
 
-message ValidateSessionResponse {
-  oneof result {
-    SessionInfo session = 1;
-    Error error = 2;
-  }
+message LoginRequest {
+  string code = 1;
+  string state = 2;
 }
 
-message LogoutRequest {
-  string session_id = 1;
-}
-
-// Internal messages (for service-to-service communication)
+// create session
 message CreateSessionRequest {
   string user_id = 1;
   string twitch_access_token = 2;
@@ -58,11 +59,65 @@ message CreateSessionResponse {
   }
 }
 
+// Logout
+message LogoutRequest {
+  string session_token = 1;
+}
+
+message LogoutResponse {
+  oneof result {
+    bool success = 1;
+    Error error = 2;
+  }
+}
+
+// Token revocation
+message RevokeTokenRequest {
+  string session_token = 1;
+  TokenType token_type = 2;
+}
+
+message RevokeTokenResponse {
+  oneof result {
+    bool success = 1;
+    Error error = 2;
+  }
+}
+
+// Token refresh
+message RefreshSessionRequest {
+  string session_token = 1;
+}
+
+message RefreshSessionResponse {
+  oneof result {
+    SessionInfo session = 1;
+    Error error = 2;
+  }
+}
+
+// Verify session
+message VerifySessionRequest {
+  string session_token = 1;
+}
+
+message VerifySessionResponse {
+  oneof result {
+    SessionInfo session = 1;
+    Error error = 2;
+  }
+}
+
 service AuthService {
-  // Session management
-  rpc ValidateSession(ValidateSessionRequest) returns (ValidateSessionResponse) {}
-  rpc Logout(LogoutRequest) returns (google.protobuf.Empty) {}
+  // Authentication
+  rpc Login(LoginRequest) returns (LoginResponse);
   
-  // Internal methods (service-to-service)
-  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
+  // Session management
+  rpc VerifySession(VerifySessionRequest) returns (VerifySessionResponse);
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
+  
+  // Token management
+  rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
 }

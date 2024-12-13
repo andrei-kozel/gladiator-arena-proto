@@ -63,6 +63,7 @@ message UpdateUserRequest {
   optional string display_name = 4;
   optional string profile_image_url = 5;
   optional TwitchUserType user_type = 6;
+  string twitch_id = 7;
 }
 
 message UserResponse {
