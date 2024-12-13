@@ -29,7 +29,7 @@ message Error {
 }
 
 message User {
-  string id = 1;
+  uint64 id = 1  [(gogoproto.customtype) = "uint"];;
   string twitch_id = 2;
   string username = 3;
   string email = 4;
