@@ -1,113 +1,68 @@
 syntax = "proto3";
 
-option go_package = "github.com/andrei-kozel/gladiator-arena-proto/golang/auth";
-
 package auth;
 
-import "google/protobuf/timestamp.proto";
+option go_package = "github.com/andrei-kozel/gladiator-arena-proto/golang/auth";
 
-// User related messages
-message TwitchUserInfo {
-  string twitch_id = 1;
-  string login = 2;
-  string display_name = 3;
-  string email = 4;
-  string profile_image_url = 5;
-  string type = 6;
-  google.protobuf.Timestamp created_at = 7;
-  bool is_broadcaster = 8;
+import "google/protobuf/empty.proto";
+import "../users/user.proto";  // Import user proto for references
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_INVALID_SESSION = 1;
+  ERROR_CODE_SESSION_EXPIRED = 2;
+  ERROR_CODE_UNAUTHORIZED = 3;
+  ERROR_CODE_INTERNAL = 4;
 }
 
-message LoginResponse {
-  string user_id = 1;
-  string username = 2;
-  string session_token = 3;
-  string refresh_token = 4;
-  int32 expires_in = 5;
-  TwitchUserInfo twitch_info = 6;
-  google.protobuf.Timestamp issued_at = 7;
-  repeated string scopes = 8;
+message Error {
+  ErrorCode code = 1;
+  string message = 2;
+  map<string, string> metadata = 3;
 }
 
-message LoginRequest {
-  string code = 1;
-  string state = 2;
-}
-
-// Session management
-message VerifySessionRequest {
-  string session_token = 1;
-}
-
-message VerifySessionResponse {
-  bool valid = 1;
+message SessionInfo {
+  string session_id = 1;
   string user_id = 2;
-  repeated string scopes = 3;
-  google.protobuf.Timestamp expires_at = 4;
+  repeated string permissions = 3;
 }
 
-message RefreshSessionRequest {
-  string refresh_token = 1;
+message ValidateSessionRequest {
+  string session_id = 1;
 }
 
-message RefreshSessionResponse {
-  string session_token = 1;
-  string refresh_token = 2;
-  int32 expires_in = 3;
-  google.protobuf.Timestamp issued_at = 4;
+message ValidateSessionResponse {
+  oneof result {
+    SessionInfo session = 1;
+    Error error = 2;
+  }
 }
 
-// Logout
 message LogoutRequest {
-  string session_token = 1;
+  string session_id = 1;
 }
 
-message LogoutResponse {
-  bool success = 1;
-}
-
-// Token revocation
-message RevokeTokenRequest {
-  string token = 1;
-  TokenType token_type = 2;
-}
-
-message RevokeTokenResponse {
-  bool success = 1;
-}
-
-// Create session for internal service-to-service auth
+// Internal messages (for service-to-service communication)
 message CreateSessionRequest {
   string user_id = 1;
-  string username = 2;
-  int32 expires_in = 3;
-  repeated string scopes = 4;
+  string twitch_access_token = 2;
+  string twitch_refresh_token = 3;
+  int32 expires_in = 4;
+  repeated string scopes = 5;
 }
 
 message CreateSessionResponse {
-  string token = 1;
-  int32 expires_in = 2;
-  google.protobuf.Timestamp issued_at = 3;
+  oneof result {
+    SessionInfo session = 1;
+    Error error = 2;
+  }
 }
 
-// Enums
-enum TokenType {
-  TOKEN_TYPE_UNSPECIFIED = 0;
-  TOKEN_TYPE_ACCESS = 1;
-  TOKEN_TYPE_REFRESH = 2;
-}
-
-// Service definition
 service AuthService {
-  // Authentication
-  rpc Login(LoginRequest) returns (LoginResponse);
-  
   // Session management
-  rpc VerifySession(VerifySessionRequest) returns (VerifySessionResponse);
-  rpc RefreshSession(RefreshSessionRequest) returns (RefreshSessionResponse);
-  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc ValidateSession(ValidateSessionRequest) returns (ValidateSessionResponse) {}
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty) {}
   
-  // Token management
-  rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse);
-  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  // Internal methods (service-to-service)
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
 }

@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/andrei-kozel/gladiator-arena-proto/golang/user";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+enum TwitchUserType {
+  TWITCH_USER_TYPE_UNSPECIFIED = 0;
+  TWITCH_USER_TYPE_BROADCASTER = 1;
+  TWITCH_USER_TYPE_MODERATOR = 2;
+  TWITCH_USER_TYPE_VIEWER = 3;
+}
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_NOT_FOUND = 1;
+  ERROR_CODE_ALREADY_EXISTS = 2;
+  ERROR_CODE_INVALID_ARGUMENT = 3;
+  ERROR_CODE_INTERNAL = 4;
+}
+
+message Error {
+  ErrorCode code = 1;
+  string message = 2;
+  map<string, string> metadata = 3;
+}
+
+message User {
+  string id = 1;
+  string twitch_id = 2;
+  string username = 3;
+  string email = 4;
+  string display_name = 5;
+  string profile_image_url = 6;
+  TwitchUserType user_type = 7;
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}
+
+message CreateUserRequest {
+  string twitch_id = 1;
+  string username = 2;
+  string email = 3;
+  string display_name = 4;
+  string profile_image_url = 5;
+  TwitchUserType user_type = 6;
+}
+
+message GetUserRequest {
+  oneof identifier {
+    string id = 1;
+    string twitch_id = 2;
+  }
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  optional string username = 2;
+  optional string email = 3;
+  optional string display_name = 4;
+  optional string profile_image_url = 5;
+  optional TwitchUserType user_type = 6;
+}
+
+message UserResponse {
+  oneof result {
+    User user = 1;
+    Error error = 2;
+  }
+}
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (UserResponse) {}
+  rpc GetUser(GetUserRequest) returns (UserResponse) {}
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
+  rpc DeleteUser(GetUserRequest) returns (google.protobuf.Empty) {}
+}
