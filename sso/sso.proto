@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package sso.v1;
+
+option go_package = "github.com/andrei-kozel/gladiator-arena-proto/golang/sso/v1";
+
+import "google/protobuf/timestamp.proto"; 
+import "google/protobuf/empty.proto";     
+
+// Application represents supported authentication providers
+enum Application {
+  APPLICATION_UNSPECIFIED = 0;  
+  APPLICATION_TWITCH = 1;       
+}
+
+// Session creation request containing authentication details
+message CreateSessionRequest {
+  string user_id = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  
+  // Using standard timestamp format instead of int64
+  google.protobuf.Timestamp expires_at = 4; 
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  
+  Application application = 7;
+  string ip_address = 8;
+  string user_agent = 9;
+  repeated string permissions = 10;
+  repeated string scopes = 11;
+}
+
+message CreateSessionResponse {
+  string session_token = 1;  
+}
+
+message ValidateSessionRequest {
+  string session_token = 1;  
+}
+
+message ValidateSessionResponse {
+  bool valid = 1;
+  string user_id = 2;
+  repeated string permissions = 3;
+}
+
+message LogoutRequest {
+  string session_token = 1;  
+}
+
+message LogoutResponse {
+  bool success = 1;  
+}
+
+message RevokeSessionsRequest {
+  string user_id = 1; 
+  Application application = 2;
+}
+
+message RevokeSessionsResponse {
+  int32 revoked_count = 1;
+}
+
+// Using google.protobuf.Empty instead of empty messages
+message HealthCheckResponse {
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_SERVING = 1;
+    STATUS_NOT_SERVING = 2;
+  }
+  Status status = 1;
+}
+
+// SSO service for managing authentication sessions
+service SSOService {
+  // Creates a new session for authenticated user
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
+
+  // Validates existing session token
+  rpc ValidateSession(ValidateSessionRequest) returns (ValidateSessionResponse) {}
+
+  // Logs out user by invalidating their session
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+
+  // Revokes all sessions for a specific user and application
+  rpc RevokeSessions(RevokeSessionsRequest) returns (RevokeSessionsResponse) {}
+
+  // Checks service health status
+  rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
+}
