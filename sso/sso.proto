@@ -67,20 +67,21 @@ message GetUserRequest {
 
 // Session creation request containing authentication details
 message CreateSessionRequest {
-  string user_id = 1;
-  string access_token = 2;
-  string refresh_token = 3;
+  int64 user_id = 1;
+  User user = 2;
+  string access_token = 3;
+  string refresh_token = 4;
   
   // Using standard timestamp format instead of int64
-  google.protobuf.Timestamp expires_at = 4; 
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp expires_at = 5; 
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
   
-  Application application = 7;
-  string ip_address = 8;
-  string user_agent = 9;
-  repeated string permissions = 10;
-  repeated string scopes = 11;
+  Application application = 8;
+  string ip_address = 9;
+  string user_agent = 10;
+  repeated string permissions = 11;
+  repeated string scopes = 12;
 }
 
 message CreateSessionResponse {
