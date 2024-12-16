@@ -38,7 +38,7 @@ message CreateUserRequest {
   string broadcaster_type = 6;
   string description = 7;
   int64 view_count = 8;
-  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp created_at = 9;
 }
 
 // Request to update an existing user
