@@ -15,7 +15,7 @@ enum Application {
 
 // User 
 message User {
-  string id = 1;
+  int64 id = 1;
   string twitch_id = 2;
   string username = 3;
   string email = 4;
