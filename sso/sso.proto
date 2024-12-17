@@ -30,7 +30,7 @@ message User {
 
 // Request to create a new user
 message CreateUserRequest {
-  string twitch_id = 1;
+  int64 twitch_id = 1;
   string username = 2;
   string email = 3;
   string display_name = 4;
@@ -43,7 +43,7 @@ message CreateUserRequest {
 
 // Request to update an existing user
 message UpdateUserRequest {
-  string id = 1;
+  int64 id = 1;
   string twitch_id = 2;
   string username = 3;
   string email = 4;
@@ -57,31 +57,27 @@ message UpdateUserRequest {
 
 // Request to delete an existing user
 message DeleteUserRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 // Request to get a user by ID or Twitch ID
 message GetUserRequest {
-  string id = 1;
+  int64 id = 1;
 }
 
 // Session creation request containing authentication details
 message CreateSessionRequest {
-  int64 user_id = 1;
-  User user = 2;
-  string access_token = 3;
-  string refresh_token = 4;
-  
-  // Using standard timestamp format instead of int64
-  google.protobuf.Timestamp expires_at = 5; 
-  google.protobuf.Timestamp created_at = 6;
-  google.protobuf.Timestamp updated_at = 7;
-  
-  Application application = 8;
-  string ip_address = 9;
-  string user_agent = 10;
-  repeated string permissions = 11;
-  repeated string scopes = 12;
+  User user = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  google.protobuf.Timestamp expires_at = 4; 
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  Application application = 7;
+  string ip_address = 8;
+  string user_agent = 9;
+  repeated string permissions = 10;
+  repeated string scopes = 11;
 }
 
 message CreateSessionResponse {
@@ -94,7 +90,7 @@ message ValidateSessionRequest {
 
 message ValidateSessionResponse {
   bool valid = 1;
-  string user_id = 2;
+  int64 user_id = 2;
   repeated string permissions = 3;
 }
 
@@ -107,12 +103,12 @@ message LogoutResponse {
 }
 
 message RevokeSessionsRequest {
-  string user_id = 1; 
+  int64 user_id = 1; 
   Application application = 2;
 }
 
 message RevokeSessionsResponse {
-  int32 revoked_count = 1;
+  bool success = 1;
 }
 
 // Using google.protobuf.Empty instead of empty messages
