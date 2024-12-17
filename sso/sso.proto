@@ -58,11 +58,13 @@ message UpdateUserRequest {
 // Request to delete an existing user
 message DeleteUserRequest {
   int64 id = 1;
+  string twitch_id = 2;
 }
 
 // Request to get a user by ID or Twitch ID
 message GetUserRequest {
   int64 id = 1;
+  string twitch_id = 2;
 }
 
 // Session creation request containing authentication details
