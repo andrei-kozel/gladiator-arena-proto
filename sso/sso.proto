@@ -30,7 +30,7 @@ message User {
 
 // Request to create a new user
 message CreateUserRequest {
-  int64 twitch_id = 1;
+  string twitch_id = 1;
   string username = 2;
   string email = 3;
   string display_name = 4;
@@ -93,7 +93,8 @@ message ValidateSessionRequest {
 message ValidateSessionResponse {
   bool valid = 1;
   int64 user_id = 2;
-  repeated string permissions = 3;
+  string twitch_id = 3;
+  repeated string permissions = 4;
 }
 
 message LogoutRequest {
@@ -106,11 +107,20 @@ message LogoutResponse {
 
 message RevokeSessionsRequest {
   int64 user_id = 1; 
+  string twitch_id = 2;
   Application application = 2;
 }
 
 message RevokeSessionsResponse {
   bool success = 1;
+}
+
+message RefreshSessionRequest {
+  string session_token = 1;  
+}
+
+message RefreshSessionResponse {
+  string session_token = 1;  
 }
 
 // Using google.protobuf.Empty instead of empty messages
@@ -148,6 +158,9 @@ service SSOService {
 
   // Revokes all sessions for a specific user and application
   rpc RevokeSessions(RevokeSessionsRequest) returns (RevokeSessionsResponse) {}
+
+  // Refreshes an existing session token
+  rpc RefreshSession(ValidateSessionRequest) returns (CreateSessionResponse) {}
 
   // Checks service health status
   rpc HealthCheck(google.protobuf.Empty) returns (HealthCheckResponse) {}
