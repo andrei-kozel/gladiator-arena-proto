@@ -28,6 +28,14 @@ message User {
   int64 view_count = 11;
 }
 
+message Session {
+  int64 id = 1;
+  int64 user_id = 2;
+  string twitch_id = 3;
+  string session_token = 4;
+  google.protobuf.Timestamp expires_at = 5;
+}
+
 // Request to create a new user
 message CreateUserRequest {
   string twitch_id = 1;
@@ -83,7 +91,7 @@ message CreateSessionRequest {
 }
 
 message CreateSessionResponse {
-  string session_token = 1;  
+  Session session = 1;
 }
 
 message ValidateSessionRequest {
@@ -116,11 +124,11 @@ message RevokeSessionsResponse {
 }
 
 message RefreshSessionRequest {
-  string session_token = 1;  
+  Session session = 1;\
 }
 
 message RefreshSessionResponse {
-  string session_token = 1;  
+  Session session = 1;
 }
 
 // Using google.protobuf.Empty instead of empty messages
