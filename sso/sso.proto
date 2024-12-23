@@ -124,7 +124,7 @@ message RevokeSessionsResponse {
 }
 
 message RefreshSessionRequest {
-  Session session = 1;\
+  Session session = 1;
 }
 
 message RefreshSessionResponse {
