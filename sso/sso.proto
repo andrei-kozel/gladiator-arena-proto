@@ -117,7 +117,7 @@ message LogoutResponse {
 message RevokeSessionsRequest {
   int64 user_id = 1; 
   string twitch_id = 2;
-  Application application = 2;
+  Application application = 3;
 }
 
 message RevokeSessionsResponse {
