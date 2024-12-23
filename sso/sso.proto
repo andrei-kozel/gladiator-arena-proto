@@ -144,7 +144,6 @@ message HealthCheckResponse {
 
 // SSO service for managing authentication sessions
 service SSOService {
-<<<<<<< Updated upstream
   // Create a new User
   rpc CreateUser(CreateUserRequest) returns (User) {}
 
@@ -157,11 +156,9 @@ service SSOService {
   // Get a User by ID 
   rpc GetUser(GetUserRequest) returns (User) {}
 
-=======
   // Initialize OAuth flow
   rpc InitiateAuth(InitiateAuthRequest) returns (InitiateAuthResponse) {}
-  
->>>>>>> Stashed changes
+
   // Creates a new session for authenticated user
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
 
