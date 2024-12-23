@@ -7,6 +7,15 @@ option go_package = "github.com/andrei-kozel/gladiator-arena-proto/golang/sso/v1
 import "google/protobuf/timestamp.proto"; 
 import "google/protobuf/empty.proto";     
 
+message InitiateAuthRequest {
+  string callback_url = 1;
+}
+
+message InitiateAuthResponse {
+  string auth_url = 1;
+  string state = 2;
+}
+
 // Application represents supported authentication providers
 enum Application {
   APPLICATION_UNSPECIFIED = 0;  
@@ -135,6 +144,7 @@ message HealthCheckResponse {
 
 // SSO service for managing authentication sessions
 service SSOService {
+<<<<<<< Updated upstream
   // Create a new User
   rpc CreateUser(CreateUserRequest) returns (User) {}
 
@@ -147,6 +157,11 @@ service SSOService {
   // Get a User by ID 
   rpc GetUser(GetUserRequest) returns (User) {}
 
+=======
+  // Initialize OAuth flow
+  rpc InitiateAuth(InitiateAuthRequest) returns (InitiateAuthResponse) {}
+  
+>>>>>>> Stashed changes
   // Creates a new session for authenticated user
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
 
