@@ -16,6 +16,15 @@ message InitiateAuthResponse {
   string state = 2;
 }
 
+message CallbackRequest {
+  string code = 1;
+  string state = 2;
+}
+
+message CallbackResponse {
+  Session session = 1;
+}
+
 // Application represents supported authentication providers
 enum Application {
   APPLICATION_UNSPECIFIED = 0;  
@@ -166,6 +175,9 @@ service SSOService {
 
   // Initialize OAuth flow
   rpc InitiateAuth(InitiateAuthRequest) returns (InitiateAuthResponse) {}
+
+  // Callback for OAuth flow
+  rpc Callback(CallbackRequest) returns (CallbackResponse) {}
 
   // Creates a new session for authenticated user
   rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse) {}
